@@ -179,7 +179,7 @@ space_invader.speed(0)
 space_invader.penup()
 space_i = enemy(50)
 
-pen.color("light green")
+pen.color("dark green")
 
 script("I am actually a virus.")
 script("I can only die if you can hit me enough.")
@@ -231,10 +231,45 @@ script("Name's jeff.")
 script("I haven't seen a human in a while.")
 script("2746 days, 3 hours, 48 minutes, 24 seconds exactly.")
 script("Well, that number just changed.")
-script("Oh shoot, somethings are coming...")
+script("Oh shoot, some things are coming...")
+
+s_invader = enemy(20)
+s_invader2 = enemy(20)
+
+wn.register_shape(r"C:\Users\pooki\PycharmProjects\pythonProject30\s_invader.gif")
+
+s_i = turtle.Turtle()
+s_i.shape(r"C:\Users\pooki\PycharmProjects\pythonProject30\s_invader.gif")
+s_i.speed(0)
+s_i.penup()
+
+pygame.mixer.Channel(0).play(pygame.mixer.Sound("chill_8bit_rave.mp3"))
+
+def battle(name, image):
+    script(f"{name.hp}")
+    start2 = time.time()
+    while name.hp > 0:
+        image.onclick(lambda x, y: dmg_space(name, image))
+        if name.hp == 0:
+            end2 = time.time()
+            result2 = end2 - start2
+            image.hideturtle()
+            if result2 >= 20:
+                script("you were too slow to kill it...")
+                print("ACHIEVEMENT! Garbage fighter")
+                quit()
+
+battle(s_invader, s_i)
+script("Another one!")
+time.sleep(1)
+s_i.showturtle()
+battle(s_invader2, s_i)
+
+script("Thanks for the help!")
+script("Hm, you got some skill, maybe you should become a fighter.")
 
 end = time.time()
-lapsed = end - ding
+lapsed = int(end - ding)
 script(f"You took {lapsed} seconds to complete the game.")
 script("Thank you for playing! Continuing soon!")
 
