@@ -4,6 +4,7 @@ import pygame
 import random
 
 ding = time.time()
+xp = 0
 
 pygame.init()
 
@@ -92,6 +93,13 @@ def left():
     x -= speed
     bob.setx(x)
 
+def die():
+    script("you were too slow to kill it...")
+    slow_script("You deserve death.")
+    script(f"You died with {xp} xp.")
+    print("ACHIEVEMENT! Garbage fighter")
+    quit()
+
 script("Here, play around with this dot. It's name is Bob.")
 
 wn.listen()
@@ -102,7 +110,7 @@ wn.onkeypress(left, "Left")
 
 script("Kinda boring...")
 
-script("Lets play a new game.")
+script("Let's play a new game.")
 script("You think of a number, and I try to guess it.")
 script("Check the interpreter.")
 
@@ -213,10 +221,7 @@ while space_i.hp > 0:
                     print("ACHIEVEMENT! 18 Second Space Killer, legendary!")
         print(f"You took {result} seconds to kill the boss.")
         if result >= 60:
-            script("you were too slow to kill me...")
-            slow_script("you deserve death.")
-            print("ACHIEVEMENT! Garbage fighter")
-            quit()
+            die()
 
 pygame.mixer.Channel(0).stop()
 
@@ -245,7 +250,8 @@ s_i.penup()
 
 pygame.mixer.Channel(0).play(pygame.mixer.Sound("chill_8bit_rave.mp3"))
 
-def battle(name, image):
+def battle(name, image, gain, limit):
+    global xp
     script(f"{name.hp}")
     start2 = time.time()
     while name.hp > 0:
@@ -254,23 +260,64 @@ def battle(name, image):
             end2 = time.time()
             result2 = end2 - start2
             image.hideturtle()
-            if result2 >= 20:
-                script("you were too slow to kill it...")
-                print("ACHIEVEMENT! Garbage fighter")
-                quit()
+            if result2 >= limit:
+                die()
+            xp += gain
+            script(f"Gained {gain} xp. You now have {xp} xp.")
 
-battle(s_invader, s_i)
+battle(s_invader, s_i, 5, 20)
 script("Another one!")
 time.sleep(1)
 s_i.showturtle()
-battle(s_invader2, s_i)
+battle(s_invader2, s_i, 5, 20)
 
 script("Thanks for the help!")
-script("Hm, you got some skill, maybe you should become a fighter.")
+script("Hm, you got some skill,\nmaybe you should become a fighter.")
+script("I have 3 60 second tasks.")
+script("They range in difficulty, and the harder, \nthe better reward you get.")
+script("Check the interpreter.")
+
+wn.register_shape(r"C:\Users\pooki\PycharmProjects\pythonProject30\grim_e.gif")
+wn.register_shape(r"C:\Users\pooki\PycharmProjects\pythonProject30\grim_m.gif")
+wn.register_shape(r"C:\Users\pooki\PycharmProjects\pythonProject30\grim_h.gif")
+
+reaper = turtle.Turtle()
+reaper.speed(0)
+reaper.penup()
+
+def reaper_choose():
+
+    enemy_i = input("1 is easy, 2 is medium, and 3 is hard.\nWhich do you choose? You get 60 seconds to kill the enemy.")
+    pygame.mixer.Channel(0).play(pygame.mixer.Sound("reaper_chase.mp3"))
+    reaper.showturtle()
+
+    if enemy_i == "1":
+        script("Easy.")
+        reaper.shape(r"C:\Users\pooki\PycharmProjects\pythonProject30\grim_e.gif")
+        reaper_i = enemy(50)
+        add = 10
+    elif enemy_i == "2":
+        script("Medium.")
+        reaper.shape(r"C:\Users\pooki\PycharmProjects\pythonProject30\grim_m.gif")
+        reaper_i = enemy(75)
+        add = 20
+    else:
+        script("Hard.")
+        reaper.shape(r"C:\Users\pooki\PycharmProjects\pythonProject30\grim_h.gif")
+        reaper_i = enemy(100)
+        add = 30
+    battle(reaper_i, reaper, add, 60)
+    script("Check the interpreter.")
+    yes = input("Battle again? Type Y or N. ")
+    if yes == "Y":
+        reaper_choose()
+
+reaper_choose()
 
 end = time.time()
 lapsed = int(end - ding)
 script(f"You took {lapsed} seconds to complete the game.")
+script(f"You finished with {xp} xp. Nice!")
 script("Thank you for playing! Continuing soon!")
 
 wn.mainloop()
